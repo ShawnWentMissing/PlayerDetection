@@ -3,12 +3,12 @@ import numpy as np
 import math
 from line_merging import *
 
-def setup(src):
-    lines = process_lines(src)
+def setup(src="court.png", img=None):
+    lines = process_lines(src, img)
     for line in lines:
         y1, x1 = line[0]
         y2, x2 = line[1]
-        slope = (y2 - y1) / (x2 - x1)
+        slope = (y2 - y1) / (x2 - x1) if (x2-x1)!=0 else (y2 - y1) / 0.000001
         intercept = y1 - slope * x1
         line.append(slope)
         line.append(intercept)
@@ -141,9 +141,13 @@ def test3():
     
     cv2.imwrite('prediction/test2.jpg',img)
     
-def checkRegion(coord, src="court.png"):
-    lineDict = setup(src)
-    output = get_region(coord, lineDict)
-    return output
+def checkRegion(coord, wall, src="court.png", frame=None, time=0):
+    lineDict = setup(src=src, img=frame)
+    output = get_region(coord, lineDict, wall=wall)
+    return (time, output)
 
-test3()
+# c = (100,100)
+# img = cv2.imread("test_img.png")
+# out = checkRegion(c,2,frame=img)
+# print(out)
+
